@@ -32,18 +32,12 @@
   --color-wood: var(--wood);
   --color-emerald: var(--emerald);
   --color-line: var(--line);
-
   --font-sans: var(--font-sans, "Inter", system-ui, sans-serif);
   --font-display: var(--font-display, "Playfair Display", Georgia, serif);
 }
 
-* {
-  border-color: var(--line);
-}
-
-html {
-  scroll-behavior: smooth;
-}
+* { border-color: var(--line); }
+html { scroll-behavior: smooth; }
 
 body {
   background: var(--bg);
@@ -53,7 +47,6 @@ body {
   overflow-x: hidden;
 }
 
-/* Textura sutil de grano y luz de estudio */
 .studio-grain {
   position: fixed;
   inset: 0;
@@ -72,15 +65,10 @@ body {
   );
 }
 
-.text-balance {
-  text-wrap: balance;
-}
+.text-balance { text-wrap: balance; }
+.font-display { font-family: var(--font-display); }
 
-.font-display {
-  font-family: var(--font-display);
-}
-
-/* Tarjetas con borde luminoso al hover */
+/* Tarjetas de sección (no trading cards) */
 .card-studio {
   background: linear-gradient(180deg, var(--panel) 0%, var(--bg-soft) 100%);
   border: 1px solid var(--line);
@@ -98,13 +86,10 @@ body {
   background: linear-gradient(180deg, var(--amber-bright), var(--amber));
   color: #2a1c08;
   font-weight: 600;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+  transition: transform 0.2s ease, filter 0.2s ease;
   box-shadow: 0 10px 30px -12px rgba(224, 165, 70, 0.6);
 }
-.btn-amber:hover {
-  transform: translateY(-2px);
-  filter: brightness(1.05);
-}
+.btn-amber:hover { transform: translateY(-2px); filter: brightness(1.05); }
 
 .btn-ghost {
   border: 1px solid rgba(224, 165, 70, 0.35);
@@ -116,36 +101,18 @@ body {
   border-color: rgba(224, 165, 70, 0.7);
 }
 
-/* Animación de entrada */
 @keyframes rise {
-  from {
-    opacity: 0;
-    transform: translateY(24px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
-.animate-rise {
-  animation: rise 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) both;
-}
+.animate-rise { animation: rise 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
 
 @keyframes shimmer {
-  0% {
-    background-position: -200% 0;
-  }
-  100% {
-    background-position: 200% 0;
-  }
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
 }
 .shimmer-text {
-  background: linear-gradient(
-    90deg,
-    var(--foreground) 30%,
-    var(--amber-bright) 50%,
-    var(--foreground) 70%
-  );
+  background: linear-gradient(90deg, var(--foreground) 30%, var(--amber-bright) 50%, var(--foreground) 70%);
   background-size: 200% auto;
   background-clip: text;
   -webkit-background-clip: text;
@@ -153,30 +120,244 @@ body {
   animation: shimmer 6s linear infinite;
 }
 
-/* Scrollbar */
-::-webkit-scrollbar {
-  width: 10px;
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--panel-2); border-radius: 8px; }
+::-webkit-scrollbar-thumb:hover { background: var(--wood); }
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
 }
-::-webkit-scrollbar-track {
-  background: var(--bg);
-}
-::-webkit-scrollbar-thumb {
-  background: var(--panel-2);
-  border-radius: 8px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: var(--wood);
+.animate-marquee { animation: marquee 28s linear infinite; }
+
+
+/* ═══════════════════════════════════════════════════════════════
+   SISTEMA DE TRADING CARDS — DIEGAY
+   Inspirado en Magic: The Gathering / Pokémon TCG
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Marco exterior */
+.card-frame {
+  position: relative;
+  aspect-ratio: 5 / 7;
+  border: 2.5px solid var(--amber);
+  border-radius: 16px;
+  /* Fondo tipo cartón premium con textura de puntos */
+  background:
+    radial-gradient(circle at 1px 1px, rgba(255,255,255,0.018) 1px, transparent 0),
+    linear-gradient(168deg, #231d13 0%, #120f0b 55%, #0c0a07 100%);
+  background-size: 28px 28px, 100% 100%;
+  box-shadow:
+    inset 0 0 0 1px rgba(244, 196, 102, 0.12),
+    0 4px 8px rgba(0,0,0,0.5),
+    0 24px 64px -16px rgba(0,0,0,0.88);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  will-change: transform;
+  cursor: pointer;
 }
 
-/* Marquesina */
-@keyframes marquee {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-50%);
-  }
+/* Tarjeta rara: borde dorado más brillante */
+.card-frame-rare {
+  border-color: var(--amber-bright);
+  box-shadow:
+    inset 0 0 0 1px rgba(244, 196, 102, 0.22),
+    0 4px 8px rgba(0,0,0,0.5),
+    0 0 22px -6px rgba(244, 196, 102, 0.35),
+    0 24px 64px -16px rgba(0,0,0,0.88);
 }
-.animate-marquee {
-  animation: marquee 28s linear infinite;
+
+/* Tarjeta mítica: borde de gradiente animado */
+.card-frame-mythic {
+  border-color: transparent;
+  /* gradiente naranja-dorado que rota */
+  background-clip: padding-box;
+}
+.card-frame-mythic::after {
+  content: '';
+  position: absolute;
+  inset: -2.5px;
+  border-radius: 18px;
+  background: conic-gradient(
+    from var(--mythic-angle, 0deg),
+    #f97316, #fbbf24, #f4c466, #e0a546, #f97316
+  );
+  z-index: -1;
+  animation: mythic-spin 4s linear infinite;
+}
+@property --mythic-angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+@keyframes mythic-spin {
+  to { --mythic-angle: 360deg; }
+}
+
+/* Borde interior */
+.card-inner-border {
+  position: absolute;
+  inset: 6px;
+  border: 1px solid rgba(224, 165, 70, 0.25);
+  border-radius: 11px;
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* Brillo rastreado con el mouse */
+.card-shine {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 9;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.card-frame:hover .card-shine {
+  opacity: 1;
+}
+
+/* Foil animado para raras (arco iris sutil en movimiento) */
+.card-shine-rare {
+  background: repeating-linear-gradient(
+    110deg,
+    rgba(255,  0,128, 0.045) 0%,
+    rgba(255,200,  0, 0.055) 9%,
+    rgba(  0,255,150, 0.045) 18%,
+    rgba(  0,150,255, 0.055) 27%,
+    rgba(200,  0,255, 0.045) 36%,
+    rgba(255,  0,128, 0.045) 45%
+  );
+  background-size: 400% 400%;
+  animation: foil-drift 5s ease-in-out infinite;
+  opacity: 0.8 !important;
+}
+
+@keyframes foil-drift {
+  0%   { background-position: 0%   0%; }
+  50%  { background-position: 100% 100%; }
+  100% { background-position: 0%   0%; }
+}
+
+/* Ornamentos de esquina (L invertidas dentro del borde interior) */
+.card-corner {
+  position: absolute;
+  width: 13px;
+  height: 13px;
+  z-index: 11;
+  pointer-events: none;
+}
+.card-corner::before,
+.card-corner::after {
+  content: '';
+  position: absolute;
+  background: rgba(244, 196, 102, 0.55);
+}
+.card-corner::before { width: 1px; height: 100%; } /* línea vertical */
+.card-corner::after  { width: 100%; height: 1px; } /* línea horizontal */
+
+.card-corner-tl { top: 9px; left: 9px; }
+.card-corner-tl::before { top: 0; left: 0; }
+.card-corner-tl::after  { top: 0; left: 0; }
+
+.card-corner-tr { top: 9px; right: 9px; }
+.card-corner-tr::before { top: 0; right: 0; }
+.card-corner-tr::after  { top: 0; right: 0; }
+
+.card-corner-bl { bottom: 9px; left: 9px; }
+.card-corner-bl::before { bottom: 0; left: 0; }
+.card-corner-bl::after  { bottom: 0; left: 0; }
+
+.card-corner-br { bottom: 9px; right: 9px; }
+.card-corner-br::before { bottom: 0; right: 0; }
+.card-corner-br::after  { bottom: 0; right: 0; }
+
+/* ── Secciones internas de la carta ─────────────────── */
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 11px 15px 5px;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 5;
+}
+
+.card-name-area {
+  padding: 3px 15px 7px;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 5;
+}
+
+/* Área de arte — se expande para llenar el espacio */
+.card-art-box {
+  position: relative;
+  flex: 2;               /* dos partes del espacio flexible */
+  min-height: 0;
+  margin: 0 9px;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid rgba(224, 165, 70, 0.22);
+  flex-shrink: 0;
+}
+
+/* Separador "Type Line" (como en MTG) */
+.card-type-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 15px;
+  background: rgba(224, 165, 70, 0.055);
+  border-top: 1px solid rgba(224, 165, 70, 0.18);
+  border-bottom: 1px solid rgba(224, 165, 70, 0.18);
+  flex-shrink: 0;
+  position: relative;
+  z-index: 5;
+}
+
+/* Caja de texto / descripción (flavor text) */
+.card-text-box {
+  padding: 7px 15px 5px;
+  flex: 1;             /* una parte del espacio flexible */
+  min-height: 0;
+  overflow: hidden;
+  position: relative;
+  z-index: 5;
+  /* Líneas horizontales sutiles en el fondo (como papel de texto) */
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent,
+    transparent 15px,
+    rgba(224, 165, 70, 0.045) 15px,
+    rgba(224, 165, 70, 0.045) 16px
+  );
+}
+
+/* Barra de stats (precio / poder) */
+.card-stats-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 15px;
+  border-top: 1px solid rgba(224, 165, 70, 0.2);
+  background: rgba(0,0,0,0.28);
+  flex-shrink: 0;
+  position: relative;
+  z-index: 5;
+}
+
+/* Línea de coleccionista (número de carta) */
+.card-collector-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 3px 15px 8px;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 5;
 }
