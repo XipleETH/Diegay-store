@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { CardFrame, RARITY_SYMBOL, RARITY_COLOR, type Rarity } from "@/components/CardFrame";
+import { CardFrame } from "@/components/CardFrame";
+import { RARITY_SYMBOL, accentFromGradient, type Rarity } from "@/lib/cards";
 import { type Product, formatPrice } from "@/data/catalog";
 
 const CAT_LABEL: Record<string, string> = {
@@ -23,18 +24,18 @@ function rarity(p: Product): Rarity {
 export function ProductCard({ product }: { product: Product }) {
   const r = rarity(product);
   const symbol = RARITY_SYMBOL[r];
-  const symbolColor = RARITY_COLOR[r];
+  const accent = accentFromGradient(product.gradient);
 
   return (
     <Link href={`/tienda/producto/${product.slug}`} className="block">
-      <CardFrame rarity={r}>
+      <CardFrame rarity={r} accent={accent}>
 
         {/* ── Encabezado ─────────────────────────────── */}
         <div className="card-header">
           <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-muted/80">
             {CAT_LABEL[product.category] ?? "PRODUCTO"}
           </span>
-          <span className="text-[10px] font-bold" style={{ color: symbolColor }}>
+          <span className="text-[10px] font-bold" style={{ color: accent }}>
             {symbol}
           </span>
         </div>
@@ -55,7 +56,10 @@ export function ProductCard({ product }: { product: Product }) {
           </div>
           <div className="absolute inset-0 bg-gradient-to-t from-black/55 to-transparent" />
           {product.badge && (
-            <div className="absolute bottom-2 left-2 rounded-[3px] bg-amber/90 px-1.5 py-[2px] text-[8px] font-extrabold uppercase tracking-wider text-black">
+            <div
+              className="absolute bottom-2 left-2 rounded-[3px] px-1.5 py-[2px] text-[8px] font-extrabold uppercase tracking-wider text-black"
+              style={{ background: accent }}
+            >
               {product.badge}
             </div>
           )}
@@ -71,7 +75,7 @@ export function ProductCard({ product }: { product: Product }) {
           <span className="text-[10px] italic text-muted/70">
             {TYPE_LINE[product.category]} — {product.brand}
           </span>
-          <span className="text-[11px] text-amber/60">♪</span>
+          <span className="text-[11px]" style={{ color: accent, opacity: 0.7 }}>♪</span>
         </div>
 
         {/* ── Texto descriptivo (flavor text) ───────── */}
@@ -83,10 +87,13 @@ export function ProductCard({ product }: { product: Product }) {
 
         {/* ── Stats: precio + estrellas ──────────────── */}
         <div className="card-stats-bar">
-          <span className="font-display text-[12px] font-bold text-amber-bright">
+          <span
+            className="font-display text-[12px] font-bold"
+            style={{ color: accent }}
+          >
             {formatPrice(product.price, product.currency)}
           </span>
-          <span className="text-[10px] tracking-tight text-amber/90">
+          <span className="text-[10px] tracking-tight" style={{ color: accent, opacity: 0.9 }}>
             {"★".repeat(product.rating)}
             <span className="ml-1 text-muted/60 text-[9px]">{product.reviews}</span>
           </span>

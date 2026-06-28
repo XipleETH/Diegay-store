@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { CardFrame, RARITY_SYMBOL, RARITY_COLOR, type Rarity } from "@/components/CardFrame";
+import { CardFrame } from "@/components/CardFrame";
+import { RARITY_SYMBOL, accentFromGradient, type Rarity } from "@/lib/cards";
 import { type Course, formatSessionDate } from "@/data/courses";
 import { formatPrice } from "@/data/catalog";
 
@@ -11,11 +12,11 @@ export function CourseCard({ course }: { course: Course }) {
   const isLive = course.type === "vivo";
   const r = rarity(course);
   const symbol = RARITY_SYMBOL[r];
-  const symbolColor = RARITY_COLOR[r];
+  const accent = accentFromGradient(course.gradient);
 
   return (
     <Link href={`/cursos/${course.slug}`} className="block">
-      <CardFrame rarity={r}>
+      <CardFrame rarity={r} accent={accent}>
 
         {/* ── Encabezado ─────────────────────────────── */}
         <div className="card-header">
@@ -29,7 +30,7 @@ export function CourseCard({ course }: { course: Course }) {
               GRABADO
             </span>
           )}
-          <span className="text-[10px] font-bold" style={{ color: symbolColor }}>
+          <span className="text-[10px] font-bold" style={{ color: accent }}>
             {symbol}
           </span>
         </div>
@@ -59,7 +60,7 @@ export function CourseCard({ course }: { course: Course }) {
           <span className="text-[10px] italic text-muted/70">
             {isLive ? "Conjuro" : "Encantamiento"} — {course.instrument}
           </span>
-          <span className="text-[11px] text-amber/60">♪</span>
+          <span className="text-[11px]" style={{ color: accent, opacity: 0.7 }}>♪</span>
         </div>
 
         {/* ── Texto ──────────────────────────────────── */}
@@ -81,7 +82,10 @@ export function CourseCard({ course }: { course: Course }) {
 
         {/* ── Stats ──────────────────────────────────── */}
         <div className="card-stats-bar">
-          <span className="font-display text-[12px] font-bold text-amber-bright">
+          <span
+            className="font-display text-[12px] font-bold"
+            style={{ color: accent }}
+          >
             {formatPrice(course.price, course.currency)}
           </span>
           <span className="text-[10px] text-muted/70">

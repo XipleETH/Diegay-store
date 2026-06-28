@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { CardFrame, RARITY_SYMBOL, RARITY_COLOR } from "@/components/CardFrame";
+import { CardFrame } from "@/components/CardFrame";
+import { RARITY_SYMBOL, accentFromGradient } from "@/lib/cards";
 import { type Article, formatArticleDate } from "@/data/articles";
 
 const CATEGORY_TYPE: Record<string, string> = {
@@ -10,19 +11,17 @@ const CATEGORY_TYPE: Record<string, string> = {
 };
 
 export function ArticleCard({ article }: { article: Article }) {
+  const accent = accentFromGradient(article.gradient);
   return (
     <Link href={`/articulos/${article.slug}`} className="block">
-      <CardFrame rarity="common">
+      <CardFrame rarity="common" accent={accent}>
 
         {/* ── Encabezado ─────────────────────────────── */}
         <div className="card-header">
           <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-muted/80">
             ARTÍCULO
           </span>
-          <span
-            className="text-[10px] font-bold"
-            style={{ color: RARITY_COLOR.common }}
-          >
+          <span className="text-[10px] font-bold" style={{ color: accent }}>
             {RARITY_SYMBOL.common}
           </span>
         </div>
@@ -52,7 +51,7 @@ export function ArticleCard({ article }: { article: Article }) {
           <span className="text-[10px] italic text-muted/70">
             {CATEGORY_TYPE[article.category] ?? "Encantamiento"} — {article.category}
           </span>
-          <span className="text-[11px] text-amber/60">♪</span>
+          <span className="text-[11px]" style={{ color: accent, opacity: 0.7 }}>♪</span>
         </div>
 
         {/* ── Texto ──────────────────────────────────── */}

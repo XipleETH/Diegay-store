@@ -1,30 +1,22 @@
 "use client";
 
 import { useRef, type ReactNode } from "react";
-
-export type Rarity = "common" | "uncommon" | "rare" | "mythic";
-
-export const RARITY_SYMBOL: Record<Rarity, string> = {
-  common:   "●",
-  uncommon: "◆◆",
-  rare:     "◆ RARO",
-  mythic:   "◈ MÍTICO",
-};
-
-export const RARITY_COLOR: Record<Rarity, string> = {
-  common:   "#7a7060",
-  uncommon: "#a8a090",
-  rare:     "#e0a546",
-  mythic:   "#f97316",
-};
+import type { Rarity } from "@/lib/cards";
 
 interface Props {
   children: ReactNode;
   rarity?: Rarity;
+  /** Color de acento del marco (del instrumento/categoría). */
+  accent?: string;
   className?: string;
 }
 
-export function CardFrame({ children, rarity = "common", className = "" }: Props) {
+export function CardFrame({
+  children,
+  rarity = "common",
+  accent = "#e0a546",
+  className = "",
+}: Props) {
   const ref = useRef<HTMLDivElement>(null);
 
   const onMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -75,6 +67,7 @@ export function CardFrame({ children, rarity = "common", className = "" }: Props
       onMouseMove={onMouseMove}
       onMouseLeave={onMouseLeave}
       className={frameClass}
+      style={{ "--card-accent": accent } as React.CSSProperties}
     >
       {/* borde interior */}
       <div className="card-inner-border" />
